@@ -1,67 +1,51 @@
-import Link from "next/link";
+import AcmeLogo from '~/app/ui/acme-logo';
+import { lusitana } from '~/app/ui/fonts';
+import Image from 'next/image';
 
-import { LatestPost } from "~/app/_components/post";
-import { getServerAuthSession } from "~/server/auth";
-import { api, HydrateClient } from "~/trpc/server";
-
-export default async function Home() {
-  const hello = await api.post.hello({ text: "from tRPC" });
-  const session = await getServerAuthSession();
-
-  void api.post.getLatest.prefetch();
-
+import Link from 'next/link';
+export default function Page() {
   return (
-    <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-          </h1>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">First Steps →</h3>
-              <div className="text-lg">
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
-              </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">Documentation →</h3>
-              <div className="text-lg">
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
-            </Link>
-          </div>
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {hello ? hello.greeting : "Loading tRPC query..."}
-            </p>
-
-            <div className="flex flex-col items-center justify-center gap-4">
-              <p className="text-center text-2xl text-white">
-                {session && <span>Logged in as {session.user?.name}</span>}
-              </p>
-              <Link
-                href={session ? "/api/auth/signout" : "/api/auth/signin"}
-                className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-              >
-                {session ? "Sign out" : "Sign in"}
-              </Link>
-            </div>
-          </div>
-
-          {session?.user && <LatestPost />}
+    <main className="flex min-h-screen flex-col p-6">
+      <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
+        <AcmeLogo />
+      </div>
+      <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
+        <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
+          <div
+            className="h-0 w-0 border-b-[30px] border-l-[20px] border-r-[20px] border-b-black border-l-transparent border-r-transparent"
+          />
+          <p className={`${lusitana.className} text-xl text-gray-800 md:text-3xl md:leading-normal`}>
+            <strong>Welcome to Acme.</strong> This is the example for the{' '}
+            <a href="https://nextjs.org/learn/" className="text-blue-500">
+              Next.js Learn Course
+            </a>
+            , brought to you by Vercel.
+          </p>
+          <Link
+            href="/api/auth/signin"
+            className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
+          >
+            <span>Log in</span>
+          </Link>
         </div>
-      </main>
-    </HydrateClient>
+        <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
+          {/* Add Hero Images Here */}
+          <Image
+            src="/hero-desktop.png"
+            width={1000}
+            height={760}
+            className="hidden md:block"
+            alt="Screenshots of the dashboard project showing desktop and mobile versions"
+          />
+          <Image
+            src="/hero-mobile.png"
+            width={560}
+            height={620}
+            className="block md:hidden"
+            alt="Screenshots of the dashboard project showing mobile version"
+          />
+        </div>
+      </div>
+    </main>
   );
 }
